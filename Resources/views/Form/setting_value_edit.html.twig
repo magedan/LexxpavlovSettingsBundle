@@ -4,7 +4,7 @@
 {% set value = subject.value %}
 {% set _attr = attr|merge({'data-type': subject.type}) %}
 <div class="lexxpavlov_settings_value_container">
-{%- spaceless %}
+{%- apply spaceless %}
     {% if subject.type is constant('Lexxpavlov\\SettingsBundle\\DBAL\\SettingsType::Boolean') %}
         {% set attr = _attr %}
         {% if value == true %}
@@ -37,7 +37,7 @@
         {% set attr = _attr %}
         {{ block(html_widget ? html_widget~'_widget': 'textarea_widget') }}
     {% endif %}
-{% endspaceless %}
+{% endapply -%}
 </div>
 {% set value = null %}
 <script type="text/html" id="tpl_widget_boolean_{{ widget_id }}">

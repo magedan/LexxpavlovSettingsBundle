@@ -32,7 +32,7 @@ class SettingsAdmin extends AbstractAdmin
                 'sort_parent_association_mappings' => array(array('fieldName' => 'category'))
             ))
             ->add('type', ChoiceType::class, array('choices' => SettingsType::getReadableValues(), 'catalogue' => 'messages'))
-            ->add('value', null, array('template' => 'LexxpavlovSettingsBundle:Admin:list_value.html.twig'))
+            ->add('value', null, array('template' => '@LexxpavlovSettings/Admin/list_value.html.twig'))
             ->add('comment')
         ;
     }
@@ -110,7 +110,7 @@ class SettingsAdmin extends AbstractAdmin
     {
         return array_merge(
             parent::getFormTheme(),
-            array('LexxpavlovSettingsBundle:Form:setting_value_edit.html.twig')
+            array('@LexxpavlovSettings/Form/setting_value_edit.html.twig')
         );
     }
 
