@@ -13,16 +13,27 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Lexxpavlov\SettingsBundle\DBAL\SettingsType;
 use Lexxpavlov\SettingsBundle\Entity\Settings;
 use Lexxpavlov\SettingsBundle\Entity\Category;
+use Lexxpavlov\SettingsBundle\Service\Settings as SettingsService;
 
 class SettingsAdmin extends AbstractAdmin
 {
-    public function configureListFields(ListMapper $listMapper)
+    private ?SettingsService $settings = null;
+
+    public function setSettings(SettingsService $settings): void
     {
-        $useCategoryComment = $this->getConfigurationPool()->getContainer()
-            ->getParameter('lexxpavlov_settings.use_category_comment');
+        $this->settings = $settings;
+    }
+
+    public function configureListFields(ListMapper $listMapper): void
+    {
+        $useCategoryComment = false;
 
         $listMapper
-            ->addIdentifier('name')
+            ->addIdentifier('name', null, [
+                'route' => [
+                    'name' => 'edit',
+                ],
+            ])
             ->add('category', null, array(
                 'associated_property' => function(Category $cat) use ($useCategoryComment) {
                     return $useCategoryComment && $cat->getComment() ? $cat->getComment() : $cat->getName();
@@ -37,7 +48,7 @@ class SettingsAdmin extends AbstractAdmin
         ;
     }
 
-    public function configureFormFields(FormMapper $formMapper)
+    public function configureFormFields(FormMapper $formMapper): void
     {
         $valueType = $this->isNewForm()
             ? 'Lexxpavlov\SettingsBundle\Form\Type\SettingValueType'
@@ -54,25 +65,29 @@ class SettingsAdmin extends AbstractAdmin
         ;
     }
 
-    public function configureDatagridFilters(DatagridMapper $datagridMapper)
+    public function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
-        $useCategoryComment = $this->getConfigurationPool()->getContainer()
-            ->getParameter('lexxpavlov_settings.use_category_comment');
+        $useCategoryComment = false;
 
         $categoryOptions = $this->isNewForm()
-            ? array(
+            ? [
                 'choice_label' => function (Category $cat) use ($useCategoryComment) {
                     return $useCategoryComment && $cat->getComment() ? $cat->getComment() : $cat->getName();
                 },
-            ) : array();
+            ] : [];
         $datagridMapper
-            ->add('category', null, array(), null, $categoryOptions)
+            ->add('category', null, ['field_options' => $categoryOptions])
             ->add('name')
-            ->add('type', null, array(), ChoiceType::class, array('choices' => SettingsType::getChoices()))
+            ->add('type', null, [
+                'field_type' => ChoiceType::class,
+                'field_options' => [
+                    'choices' => SettingsType::getChoices(),
+                ],
+            ])
         ;
     }
 
-    public function configureShowFields(ShowMapper $showMapper)
+    public function configureShowFields(ShowMapper $showMapper): void
     {
         $showMapper
             ->add('name')
@@ -82,10 +97,18 @@ class SettingsAdmin extends AbstractAdmin
         ;
     }
 
+    protected function configure(): void
+    {
+        $this->setFormTheme(array_merge(
+            $this->getFormTheme(),
+            ['@LexxpavlovSettings/Form/setting_value_edit.html.twig']
+        ));
+    }
+
     /**
      * @param Settings $object
      */
-    public function postPersist($object)
+    protected function postPersist(object $object): void
     {
         $this->clearCache($object);
     }
@@ -93,7 +116,7 @@ class SettingsAdmin extends AbstractAdmin
     /**
      * @param Settings $object
      */
-    public function postUpdate($object)
+    protected function postUpdate(object $object): void
     {
         $this->clearCache($object);
     }
@@ -101,17 +124,9 @@ class SettingsAdmin extends AbstractAdmin
     /**
      * @param Settings $object
      */
-    public function preRemove($object)
+    protected function preRemove(object $object): void
     {
         $this->clearCache($object);
-    }
-
-    public function getFormTheme()
-    {
-        return array_merge(
-            parent::getFormTheme(),
-            array('@LexxpavlovSettings/Form/setting_value_edit.html.twig')
-        );
     }
 
     /**
@@ -119,11 +134,10 @@ class SettingsAdmin extends AbstractAdmin
      */
     private function clearCache(Settings $object)
     {
-        /** @var \Lexxpavlov\SettingsBundle\Service\Settings $settings */
-        $settings = $this->getConfigurationPool()->getContainer()->get('lexxpavlov_settings.settings');
-        $settings->clearCache($object->getName());
+        $this->settings->clearCache($object->getName());
+
         if ($object->getCategory()) {
-            $settings->clearGroupCache($object->getCategory()->getName());
+            $this->settings->clearGroupCache($object->getCategory()->getName());
         }
     }
 

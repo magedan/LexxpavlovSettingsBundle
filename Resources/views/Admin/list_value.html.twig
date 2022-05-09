@@ -1,4 +1,4 @@
-{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+{% extends get_admin_template('base_list_field', admin.code) %}
 {% block field %}
 {% apply spaceless %}
     {% if object.type is constant('Lexxpavlov\\SettingsBundle\\DBAL\\SettingsType::Boolean') %}

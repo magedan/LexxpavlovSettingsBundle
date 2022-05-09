@@ -15,10 +15,10 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('lexxpavlov_settings');
+        $treeBuilder = new TreeBuilder('lexxpavlov_settings');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

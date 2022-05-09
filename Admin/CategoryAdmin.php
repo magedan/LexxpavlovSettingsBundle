@@ -9,18 +9,30 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 
 use Lexxpavlov\SettingsBundle\Entity\Category;
+use Lexxpavlov\SettingsBundle\Service\Settings as SettingsService;
 
 class CategoryAdmin extends AbstractAdmin
 {
-    public function configureListFields(ListMapper $listMapper)
+    private ?SettingsService $settings = null;
+
+    public function setSettings(SettingsService $settings): void
+    {
+        $this->settings = $settings;
+    }
+
+    public function configureListFields(ListMapper $listMapper): void
     {
         $listMapper
-            ->addIdentifier('name')
+            ->addIdentifier('name', null, [
+                'route' => [
+                    'name' => 'edit',
+                ],
+            ])
             ->add('comment')
         ;
     }
 
-    public function configureFormFields(FormMapper $formMapper)
+    public function configureFormFields(FormMapper $formMapper): void
     {
         $formMapper
             ->add('name')
@@ -28,14 +40,14 @@ class CategoryAdmin extends AbstractAdmin
         ;
     }
 
-    public function configureDatagridFilters(DatagridMapper $datagridMapper)
+    public function configureDatagridFilters(DatagridMapper $datagridMapper): void
     {
         $datagridMapper
             ->add('name')
         ;
     }
 
-    public function configureShowFields(ShowMapper $showMapper)
+    public function configureShowFields(ShowMapper $showMapper): void
     {
         $showMapper
             ->add('name')
@@ -44,25 +56,25 @@ class CategoryAdmin extends AbstractAdmin
     }
 
     /**
-     * @param Category $object
+     * @param Catergory $object
      */
-    public function postPersist($object)
+    protected function postPersist(object $object): void
     {
         $this->clearCache($object);
     }
 
     /**
-     * @param Category $object
+     * @param Catergory $object
      */
-    public function postUpdate($object)
+    protected function postUpdate(object $object): void
     {
         $this->clearCache($object);
     }
 
     /**
-     * @param Category $object
+     * @param Catergory $object
      */
-    public function preRemove($object)
+    protected function preRemove(object $object): void
     {
         $this->clearCache($object);
     }
@@ -72,8 +84,6 @@ class CategoryAdmin extends AbstractAdmin
      */
     private function clearCache(Category $object)
     {
-        /** @var \Lexxpavlov\SettingsBundle\Service\Settings $settings */
-        $settings = $this->getConfigurationPool()->getContainer()->get('lexxpavlov_settings.settings');
-        $settings->clearGroupCache($object->getName());
+        $this->settings->clearGroupCache($object->getName());
     }
 }

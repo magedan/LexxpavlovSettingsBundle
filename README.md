@@ -6,7 +6,7 @@ This bundle helps you to manage your settings in Symfony2/3/4 project.
 Settings has one of types: Boolean, Integer, Float, String, Text, Html. You may get one concrete setting or fetch group
 of settings. Fetching of settings may be cached by your cache provider used in project.
 
-Management of settings provides by SonataAdminBundle. In other case you may manage settings via code by use special 
+Management of settings provides by SonataAdminBundle. In other case you may manage settings via code by use special
 functions or predefined forms.
 
 Installation
@@ -51,7 +51,7 @@ public function registerBundles()
 
 ### Configuration
 
-Bundle does not need any required parameters and will work without changes in `config.yml`. But you may config some 
+Bundle does not need any required parameters and will work without changes in `config.yml`. But you may config some
 parameters, read more below.
 
 Now you need create the tables in your database:
@@ -76,8 +76,8 @@ If you use 1.1.* version of bundle, you need to update database.
 Usage
 -----
 
-Use SonataAdminBundle for manage your settings. Otherwise use predefined forms. You feel free to 
-use the bundle if you configure settings with database tool (phpMyAdmin or other) or by use special functions called in 
+Use SonataAdminBundle for manage your settings. Otherwise use predefined forms. You feel free to
+use the bundle if you configure settings with database tool (phpMyAdmin or other) or by use special functions called in
 your code (see below).
 
 You may put settings to group or not. Groups may be used for fetching several settings at one query.
@@ -145,11 +145,11 @@ lexxpavlov_settings:
     cache_provider: cache.app   # default null, for enable database caching set up name of caching service
     use_category_comment: false # default false, use category comment as its title in settings list (in SettingsAdmin)
     ckeditor:                   # set parameters of ckeditor. Not need if IvoryCKEditorBundle is installed
-        base_path: /ckeditor/            
+        base_path: /ckeditor/
         js_path: /ckeditor/ckeditor.js
 ```
 
-`ckeditor` form type may be added by [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorBundle). If you are 
+`ckeditor` form type may be added by [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorBundle). If you are
 using CKEditor without `IvoryCKEditorBundle`, you must specify the parameters `base_path` and `js_path`.
 
 ### Groups of settings
@@ -165,7 +165,7 @@ $param1 = $cat['param1'];
 $param2 = $cat['param2'];
 ```
 
-Both of cases has an identical perfomance - the whole group will fetch while first access to it, fetching of data will 
+Both of cases has an identical perfomance - the whole group will fetch while first access to it, fetching of data will
 be only one time.
 
 #### Using default value in twig
@@ -193,7 +193,7 @@ be only one time.
 
 #### Example of using the settings group
 
-There is an example of group using - settings which used in backend and frontend. Several settings are placed in 
+There is an example of group using - settings which used in backend and frontend. Several settings are placed in
 `client` group, and include to template:
 ```twig
 {# app/Resources/views/base.html.twig #}
@@ -224,15 +224,15 @@ lexxpavlov_settings:
     cache_provider: cache.app
 ```
 
-The bundle will use registered service `cache.app` for cache data. Cache provider may be one of 
-[Doctrine cache](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/caching.html) or 
+The bundle will use registered service `cache.app` for cache data. Cache provider may be one of
+[Doctrine cache](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/caching.html) or
 [Symfony cache](https://symfony.com/doc/current/components/cache.html) - PSR-6 Cache (Symfony 3.1) or PSR-16 Simple Cache (Symfony 3.3).
 
 ### Arrange Settings admin group in SonataAdminBundle
 
-`SonataAdminBundle` arranges admin groups by its bundles in `AppKernel::registerBundles()`. If `LexxpavlovSettingsBundle` 
-is added above your app bundles, then Settings group will be first group in menu (before your content or service groups, 
-created in your bundles). If you want that settings group will be last group (below your groups), you add 
+`SonataAdminBundle` arranges admin groups by its bundles in `AppKernel::registerBundles()`. If `LexxpavlovSettingsBundle`
+is added above your app bundles, then Settings group will be first group in menu (before your content or service groups,
+created in your bundles). If you want that settings group will be last group (below your groups), you add
 `LexxpavlovSettingsBundle` after your bundle in `AppKernel::registerBundles()`:
 ```php
 // app/AppKernel.php
@@ -283,7 +283,7 @@ For use predefined forms, you need add form theme:
 twig:
     # ...
     form_themes:
-        - 'LexxpavlovSettingsBundle:Form:setting_value_edit.html.twig'
+        - '@LexxpavlovSettings/Form/setting_value_edit.html.twig'
 ```
 
 ##### Manual create and update settings

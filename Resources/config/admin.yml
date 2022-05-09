@@ -2,21 +2,15 @@ services:
     lexxpavlov.sonata.admin.settings_categories:
         class: Lexxpavlov\SettingsBundle\Admin\CategoryAdmin
         tags:
-            - { name: sonata.admin, manager_type: orm, group: "Settings", label: "Categories", label_catalogue: "messages", icon: '<i class="fa fa-wrench"></i>' }
-        arguments:
-            - ~
-            - Lexxpavlov\SettingsBundle\Entity\Category
-            - ~
+            - { name: sonata.admin, model_class: Lexxpavlov\SettingsBundle\Entity\Category, manager_type: orm, group: "Settings", label: "Categories", translation_domain: "messages", icon: '<i class="fas fa-wrench"></i>' }
         calls:
-            - [ setTranslationDomain, [messages]]
+            - [ setTranslationDomain, ['messages']]
+            - [ setSettings, ['@Lexxpavlov\SettingsBundle\Service\Settings']]
 
     lexxpavlov.sonata.admin.settings:
         class: Lexxpavlov\SettingsBundle\Admin\SettingsAdmin
         tags:
-            - { name: sonata.admin, manager_type: orm, group: "Settings", label: "Settings", label_catalogue: "messages", icon: '<i class="fa fa-wrench"></i>' }
-        arguments:
-            - ~
-            - Lexxpavlov\SettingsBundle\Entity\Settings
-            - ~
+            - { name: sonata.admin, model_class: Lexxpavlov\SettingsBundle\Entity\Settings, manager_type: orm, group: "Settings", label: "Settings", translation_domain: "messages", icon: '<i class="fas fa-wrench"></i>' }
         calls:
-            - [ setTranslationDomain, [messages]]
+            - [ setTranslationDomain, ['messages']]
+            - [ setSettings, ['@Lexxpavlov\SettingsBundle\Service\Settings']]
