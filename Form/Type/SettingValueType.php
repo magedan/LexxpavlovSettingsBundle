@@ -6,23 +6,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class SettingValueType extends AbstractType
 {
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
-    /** @var string */
-    private $htmlWidget;
+    private ?string $htmlWidget;
 
-    /**
-     * @param ContainerInterface $container
-     * @param string $htmlWidget
-     */
-    public function __construct(ContainerInterface $container, $htmlWidget)
+    public function __construct(ContainerInterface $container, ?string $htmlWidget)
     {
         $this->container = $container;
         $this->htmlWidget = $htmlWidget;
@@ -30,9 +24,7 @@ class SettingValueType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $choiceViewClass = Kernel::MAJOR_VERSION == 2 && Kernel::MINOR_VERSION == 6
-            ? 'Symfony\Component\Form\Extension\Core\View\ChoiceView'
-            : 'Symfony\Component\Form\ChoiceList\View\ChoiceView';
+        $choiceViewClass = ChoiceView::class;
         $choiceList = array(
             new $choiceViewClass('off', 'off', "Off"),
             new $choiceViewClass('on', 'on', "On"),
@@ -56,11 +48,7 @@ class SettingValueType extends AbstractType
                 $builder = $this->container->get('form.factory')->createBuilder();
 
                 $ckeditorType = $this->container->get('ivory_ck_editor.form.type');
-                if (method_exists($ckeditorType, 'configureOptions')) {
-                    $ckeditorType->configureOptions($resolver);
-                } else {
-                    $ckeditorType->setDefaultOptions($resolver);
-                }
+                $ckeditorType->configureOptions($resolver);
                 $ckeditorType->buildForm($builder, $resolver->resolve());
                 $ckeditorType->buildView($view, $builder->getForm(), []);
             } else {
@@ -78,14 +66,6 @@ class SettingValueType extends AbstractType
     public function getParent()
     {
         return TextType::class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->getBlockPrefix();
     }
 
     /**
