@@ -22,7 +22,7 @@ class SettingValueType extends AbstractType
         $this->htmlWidget = $htmlWidget;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $choiceViewClass = ChoiceView::class;
         $choiceList = array(
@@ -63,7 +63,7 @@ class SettingValueType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return TextType::class;
     }
@@ -71,7 +71,7 @@ class SettingValueType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'setting_value';
     }

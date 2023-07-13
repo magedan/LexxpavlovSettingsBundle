@@ -13,7 +13,7 @@ use Lexxpavlov\SettingsBundle\DBAL\SettingsType;
 
 class Settings extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('category', EntityType::class, array(
@@ -29,7 +29,7 @@ class Settings extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'Lexxpavlov\\SettingsBundle\\Entity\\Settings',

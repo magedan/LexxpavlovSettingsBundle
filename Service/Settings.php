@@ -10,22 +10,18 @@ use Lexxpavlov\SettingsBundle\Entity\Settings as SettingsEntity;
 use Lexxpavlov\SettingsBundle\Entity\SettingsRepository;
 
 /**
- * Class Settings
  * @package Lexxpavlov\SettingsBundle\Service
  */
 class Settings
 {
-    /** @var EntityManager */
-    private $em;
+    private EntityManager $em;
 
-    /** @var AdapterCacheInterface */
-    private $cache;
+    private AdapterCacheInterface $cache;
 
-    /** @var SettingsRepository */
-    private $repository;
+    private SettingsRepository $repository;
 
-    private $settings = array();
-    private $groups = array();
+    private array $settings = [];
+    private array $groups = [];
 
     /**
      * @param EntityManager $em
